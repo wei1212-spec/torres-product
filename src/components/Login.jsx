@@ -29,38 +29,57 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="card auth">
-      <h1>{mode === 'login' ? 'Login' : 'Create account'}</h1>
-      {error && <div className="alert error">{error}</div>}
-      {notice && <div className="alert success">{notice}</div>}
+    <div className="auth-shell">
+      <div className="card auth-panel">
+        <div className="auth-header">
+          <span className="eyebrow">Secure access</span>
+          <h1>{mode === 'login' ? 'Welcome back' : 'Create account'}</h1>
+        </div>
 
-      <form onSubmit={submit}>
-        <label>Username
-          <input value={form.username} onChange={set('username')} required autoFocus />
-        </label>
-        {mode === 'register' && (
-          <label>Email
-            <input type="email" value={form.email} onChange={set('email')} required />
+        {error && <div className="alert error">{error}</div>}
+        {notice && <div className="alert success">{notice}</div>}
+
+        <form onSubmit={submit}>
+          <label>Username
+            <input value={form.username} onChange={set('username')} required autoFocus />
           </label>
+          {mode === 'register' && (
+            <label>Email
+              <input type="email" value={form.email} onChange={set('email')} required />
+            </label>
+          )}
+          <label>Password
+            <input type="password" value={form.password} onChange={set('password')} required minLength={6} />
+          </label>
+          <button disabled={busy}>{busy ? 'Please wait…' : mode === 'login' ? 'Login' : 'Register'}</button>
+        </form>
+
+        {mode === 'login' && (
+          <div className="demo-credentials">
+            <span>Demo accounts</span>
+            <strong>admin</strong> / <strong>admin123</strong>
+            <span className="divider">•</span>
+            <strong>user</strong> / <strong>user123</strong>
+          </div>
         )}
-        <label>Password
-          <input type="password" value={form.password} onChange={set('password')} required minLength={6} />
-        </label>
-        <button disabled={busy}>{busy ? 'Please wait…' : mode === 'login' ? 'Login' : 'Register'}</button>
-      </form>
 
-      {mode === 'login' && (
-        <p className="muted" style={{ marginTop: '0.75rem' }}>
-          Demo accounts: <strong>admin</strong> / <strong>admin123</strong> or <strong>user</strong> / <strong>user123</strong>
+        <p className="muted inline-link">
+          {mode === 'login' ? 'No account yet? ' : 'Already registered? '}
+          <a href="#" onClick={(e) => { e.preventDefault(); setError(''); setMode(mode === 'login' ? 'register' : 'login'); }}>
+            {mode === 'login' ? 'Register' : 'Login'}
+          </a>
         </p>
-      )}
+      </div>
 
-      <p className="muted">
-        {mode === 'login' ? 'No account yet? ' : 'Already registered? '}
-        <a href="#" onClick={(e) => { e.preventDefault(); setError(''); setMode(mode === 'login' ? 'register' : 'login'); }}>
-          {mode === 'login' ? 'Register' : 'Login'}
-        </a>
-      </p>
+      <aside className="auth-spotlight">
+        <div className="spotlight-badge">Inventory control</div>
+        <h2>Run your product operations with clarity.</h2>
+        <ul>
+          <li>Track stock and product activity</li>
+          <li>Review pricing and performance</li>
+          <li>Separate admin actions from viewer access</li>
+        </ul>
+      </aside>
     </div>
   );
 }

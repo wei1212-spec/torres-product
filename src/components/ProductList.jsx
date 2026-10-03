@@ -43,12 +43,20 @@ export default function ProductList({ user, onLogout }) {
     load();
   };
 
+  const inventoryValue = products.reduce((sum, p) => sum + Number(p.price || 0) * Number(p.quantity || 0), 0);
+
   return (
-    <div className="container">
-      <header>
-        <h1>Products</h1>
+    <div className="container dashboard-shell">
+      <header className="dashboard-header">
+        <div>
+          <span className="eyebrow">Product management</span>
+          <h1>Inventory dashboard</h1>
+        </div>
         <div className="header-right">
-          <span className="muted">Signed in as <strong>{user.username}</strong></span>
+          <div className="user-pill">
+            <span className="user-label">{user.username}</span>
+            <span className={`role-badge ${isAdmin ? 'admin' : 'user'}`}>{isAdmin ? 'Admin' : 'Viewer'}</span>
+          </div>
           <button className="secondary" onClick={onLogout}>Logout</button>
         </div>
       </header>
@@ -56,13 +64,28 @@ export default function ProductList({ user, onLogout }) {
       {error && <div className="alert error">{error}</div>}
       {notice && <div className="alert success" onClick={() => setNotice('')}>{notice}</div>}
 
+      <section className="stats-grid">
+        <div className="stat-card accent">
+          <span>Total products</span>
+          <strong>{products.length}</strong>
+        </div>
+        <div className="stat-card">
+          <span>Inventory value</span>
+          <strong>{peso.format(inventoryValue)}</strong>
+        </div>
+        <div className="stat-card">
+          <span>Access level</span>
+          <strong>{isAdmin ? 'Admin' : 'View only'}</strong>
+        </div>
+      </section>
+
       {isAdmin ? (
         <div className="toolbar">
           <button onClick={() => setFormFor({})}>+ Add product</button>
         </div>
       ) : (
-        <div className="toolbar">
-          <span className="muted">Viewing mode: only administrators can add, edit, or delete products.</span>
+        <div className="toolbar muted-panel">
+          <span>Viewing mode: only administrators can add, edit, or delete products.</span>
         </div>
       )}
 
