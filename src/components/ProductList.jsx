@@ -5,6 +5,7 @@ import ProductForm from './ProductForm.jsx';
 const peso = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' });
 
 export default function ProductList({ user, onLogout }) {
+  const isAdmin = user?.role === 'admin';
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,9 +56,15 @@ export default function ProductList({ user, onLogout }) {
       {error && <div className="alert error">{error}</div>}
       {notice && <div className="alert success" onClick={() => setNotice('')}>{notice}</div>}
 
-      <div className="toolbar">
-        <button onClick={() => setFormFor({})}>+ Add product</button>
-      </div>
+      {isAdmin ? (
+        <div className="toolbar">
+          <button onClick={() => setFormFor({})}>+ Add product</button>
+        </div>
+      ) : (
+        <div className="toolbar">
+          <span className="muted">Viewing mode: only administrators can add, edit, or delete products.</span>
+        </div>
+      )}
 
       <div className="card table-wrap">
         {loading ? <p className="center">Loading…</p> : (
@@ -78,8 +85,14 @@ export default function ProductList({ user, onLogout }) {
                   <td className="num">{p.quantity}</td>
                   <td className="muted">{p.created_at}</td>
                   <td className="actions">
-                    <button className="secondary small" onClick={() => setFormFor(p)}>Edit</button>
-                    <button className="danger small" onClick={() => handleDelete(p)}>Delete</button>
+                    {isAdmin ? (
+                      <>
+                        <button className="secondary small" onClick={() => setFormFor(p)}>Edit</button>
+                        <button className="danger small" onClick={() => handleDelete(p)}>Delete</button>
+                      </>
+                    ) : (
+                      <span className="muted">View only</span>
+                    )}
                   </td>
                 </tr>
               ))}

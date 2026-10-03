@@ -49,6 +49,12 @@ export default function Login({ onLogin }) {
         <button disabled={busy}>{busy ? 'Please wait…' : mode === 'login' ? 'Login' : 'Register'}</button>
       </form>
 
+      {mode === 'login' && (
+        <p className="muted" style={{ marginTop: '0.75rem' }}>
+          Demo accounts: <strong>admin</strong> / <strong>admin123</strong> or <strong>user</strong> / <strong>user123</strong>
+        </p>
+      )}
+
       <p className="muted">
         {mode === 'login' ? 'No account yet? ' : 'Already registered? '}
         <a href="#" onClick={(e) => { e.preventDefault(); setError(''); setMode(mode === 'login' ? 'register' : 'login'); }}>
